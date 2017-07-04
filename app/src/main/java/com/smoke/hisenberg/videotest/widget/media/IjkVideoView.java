@@ -117,7 +117,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     private Context mAppContext;
     private Settings mSettings;
-    private IRenderView mRenderView;
+    private IRenderView mRenderView;//初步理解，这各类表示了一块儿可渲染的区域
     private int mVideoSarNum;
     private int mVideoSarDen;
 
@@ -170,6 +170,9 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         // REMOVED: getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         setFocusable(true);
         setFocusableInTouchMode(true);
+        /**   * A view will not actually take focus if it is not focusable ({@link #isFocusable} returns
+         * false), or if it is focusable and it is not focusable in touch mode
+         * ({@link #isFocusableInTouchMode}) while the device is in touch mode.*/
         requestFocus();
         // REMOVED: mPendingSubtitleTracks = new Vector<Pair<InputStream, MediaFormat>>();
         mCurrentState = STATE_IDLE;
@@ -340,7 +343,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                     (TextUtils.isEmpty(scheme) || scheme.equalsIgnoreCase("file"))) {
                 IMediaDataSource dataSource = new FileMediaDataSource(new File(mUri.toString()));
                 mMediaPlayer.setDataSource(dataSource);
-            }  else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
                 mMediaPlayer.setDataSource(mAppContext, mUri, mHeaders);
             } else {
                 mMediaPlayer.setDataSource(mUri.toString());
@@ -604,6 +607,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         public void onTimedText(IMediaPlayer mp, IjkTimedText text) {
             if (text != null) {
                 subtitleDisplay.setText(text.getText());
+                Log.e("IjkVideoView","---------subtitleDisplay is showing ----"+text.getText());
             }
         }
     };
